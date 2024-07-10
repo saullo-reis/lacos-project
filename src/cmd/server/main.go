@@ -16,6 +16,7 @@ func main(){
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusAccepted, gin.H{"message": "ping"})
 	})
-	r.POST("/register/user", user.RegisterUser)
+	r.POST("/user/register", user.RegisterUser)
+	r.POST("/user/login", user.LoginUser)
 	r.Run()
 }

@@ -35,8 +35,8 @@ func RegisterUser(c *gin.Context) {
 	var user userStruch
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"status_code": "400",
-			"message":     "JSON Invalid",
+			"status_code": 400,
+			"message":     "JSON Invalido",
 		})
 		return
 	}
@@ -74,7 +74,7 @@ func RegisterUser(c *gin.Context) {
 		db.Exec("INSERT INTO users(username, password) VALUES($1, $2)", user.Username, hashedPassword)
 		c.JSON(http.StatusCreated, gin.H{
 			"message": "Usuário "+ user.Username + " criado",
-			"status_code": "201",
+			"status_code": 201,
 		})
 		return
 	}
