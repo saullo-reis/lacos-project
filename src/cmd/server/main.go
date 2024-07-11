@@ -19,5 +19,7 @@ func main(){
 	})
 	r.POST("/user/register", user.RegisterUser)
 	r.POST("/user/login", user.LoginUser)
+
+	r.POST("/user/changePassword", user.AuthMiddleware(), user.ChangePassword)
 	r.Run()
 }
