@@ -10,7 +10,7 @@ import (
 	dbconfig "lacos.com/src/database/config"
 )
 
-type userStruch struct {
+type userStruct struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
@@ -32,11 +32,19 @@ func RegisterUser(c *gin.Context) {
 	}
 	defer db.Close()
 
-	var user userStruch
+	var user userStruct
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status_code": 400,
 			"message":     "JSON Invalido",
+		})
+		return
+	}
+
+	if len(user.Password) < 7 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status_code": 400,
+			"message": "A senha deve ter no mínimo 8 chars!",
 		})
 		return
 	}
