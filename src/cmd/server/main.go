@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"lacos.com/src/database/migrations"
+	"lacos.com/src/handlers/persons"
 	"lacos.com/src/handlers/user"
 )
 
@@ -18,11 +19,16 @@ func main(){
 		c.JSON(http.StatusAccepted, gin.H{"message": "ping"})
 	})
 
-	r.POST("/user/register", user.RegisterUser)
+	//CONNECTION HANDLERS
 	r.POST("/user/login", user.LoginUser)
+
+	//ADMIN HANDLERS
 	r.PATCH("/user/changePassword", user.AuthMiddlewareAdmin(), user.ChangePassword)
 	r.GET("/user/getUsers/:username", user.AuthMiddlewareAdmin(), user.GetUsers)
+	r.POST("/user/register",user.AuthMiddlewareAdmin(), user.RegisterUser)
 	r.DELETE("/user/deleteUser/:username", user.AuthMiddlewareAdmin(), user.DeleteUser)
 
+	//NORMAL HANDLERS
+	r.POST("/persons/register", user.AuthMiddleware(), persons.RegisterPersons)
 	r.Run()
 }
