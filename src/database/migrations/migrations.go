@@ -29,7 +29,8 @@ func CreateTables() {
     cell_phone VARCHAR(15),
     contact_phone VARCHAR(15),
     email VARCHAR(255),
-    current_age INT
+    current_age INT,
+	active VARCHAR(1)
 	);
 
 	CREATE TABLE IF NOT EXISTS responsible_person (

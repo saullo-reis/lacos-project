@@ -31,5 +31,6 @@ func main(){
 	//NORMAL HANDLERS
 	r.POST("/persons/register", user.AuthMiddleware(), persons.RegisterPersons)
 	r.POST("/persons/search", user.AuthMiddleware(), persons.SearchPersons)
+	r.DELETE("/persons/delete/:cpf", user.AuthMiddleware(), persons.DeletePerson)
 	r.Run()
 }

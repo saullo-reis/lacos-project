@@ -3,40 +3,42 @@ package persons
 import (
 	"database/sql"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	dbconfig "lacos.com/src/database/config"
 )
 
 type SearchFieldsResponsablePerson struct {
-    IDPerson     sql.NullInt64  `json:"id_person"`
-    Name         sql.NullString `json:"name"`
-    Relationship sql.NullString `json:"relationship"`
-    RG           sql.NullString `json:"rg"`
-    CPF          sql.NullString `json:"cpf"`
-    CellPhone    sql.NullString `json:"cell_phone"`
+	IDPerson     sql.NullInt64  `json:"id_person"`
+	Name         sql.NullString `json:"name"`
+	Relationship sql.NullString `json:"relationship"`
+	RG           sql.NullString `json:"rg"`
+	CPF          sql.NullString `json:"cpf"`
+	CellPhone    sql.NullString `json:"cell_phone"`
 }
 
 type SearchFieldsPerson struct {
-	Name           sql.NullString   `json:"name"`
-    BirthDate      sql.NullString  `json:"birth_date"`
-    RG             sql.NullString   `json:"rg"`
-    CPF            sql.NullString   `json:"cpf"`
-    CadUnico       sql.NullString   `json:"cad_unico"`
-    NIS            sql.NullString   `json:"nis"`
-    School         sql.NullString   `json:"school"`
-    Address        sql.NullString   `json:"address"`
-    AddressNumber  sql.NullString   `json:"address_number"`
-    BloodType      sql.NullString   `json:"blood_type"`
-    Neighborhood   sql.NullString   `json:"neighborhood"`
-    City           sql.NullString   `json:"city"`
-    CEP            sql.NullString   `json:"cep"`
-    HomePhone      sql.NullString   `json:"home_phone"`
-    CellPhone      sql.NullString   `json:"cell_phone"`
-    ContactPhone   sql.NullString   `json:"contact_phone"`
-    Email          sql.NullString   `json:"email"`
-    CurrentAge     sql.NullInt64  `json:"current_age"`
-    ResponsiblePerson ResponseResponsiblePerson `json:"responsible_person"`
+	Name              sql.NullString            `json:"name"`
+	BirthDate         sql.NullString            `json:"birth_date"`
+	RG                sql.NullString            `json:"rg"`
+	CPF               sql.NullString            `json:"cpf"`
+	CadUnico          sql.NullString            `json:"cad_unico"`
+	NIS               sql.NullString            `json:"nis"`
+	School            sql.NullString            `json:"school"`
+	Address           sql.NullString            `json:"address"`
+	AddressNumber     sql.NullString            `json:"address_number"`
+	BloodType         sql.NullString            `json:"blood_type"`
+	Neighborhood      sql.NullString            `json:"neighborhood"`
+	City              sql.NullString            `json:"city"`
+	CEP               sql.NullString            `json:"cep"`
+	HomePhone         sql.NullString            `json:"home_phone"`
+	CellPhone         sql.NullString            `json:"cell_phone"`
+	ContactPhone      sql.NullString            `json:"contact_phone"`
+	Email             sql.NullString            `json:"email"`
+	CurrentAge        sql.NullInt64             `json:"current_age"`
+	Active            sql.NullString                    `json:"active"`
+	ResponsiblePerson ResponseResponsiblePerson `json:"responsible_person"`
 }
 
 type Params struct {
@@ -44,37 +46,39 @@ type Params struct {
 	CPF    string `json:"cpf"`
 	School string `json:"school"`
 	RG     string `json:"rg"`
+	Active string `json:"active"`
 }
 
 type ResponseResponsiblePerson struct {
-    IDPerson     int  `json:"id_person"`
-    Name         string `json:"name"`
-    Relationship string `json:"relationship"`
-    RG           string `json:"rg"`
-    CPF          string `json:"cpf"`
-    CellPhone    string `json:"cell_phone"`
+	IDPerson     int    `json:"id_person"`
+	Name         string `json:"name"`
+	Relationship string `json:"relationship"`
+	RG           string `json:"rg"`
+	CPF          string `json:"cpf"`
+	CellPhone    string `json:"cell_phone"`
 }
 
 type Response struct {
-    Name           string   `json:"name"`
-    BirthDate      string  `json:"birth_date"`
-    RG             string   `json:"rg"`
-    CPF            string   `json:"cpf"`
-    CadUnico       string   `json:"cad_unico"`
-    NIS            string   `json:"nis"`
-    School         string   `json:"school"`
-    Address        string   `json:"address"`
-    AddressNumber  string   `json:"address_number"`
-    BloodType      string   `json:"blood_type"`
-    Neighborhood   string   `json:"neighborhood"`
-    City           string   `json:"city"`
-    CEP            string   `json:"cep"`
-    HomePhone      string   `json:"home_phone"`
-    CellPhone      string   `json:"cell_phone"`
-    ContactPhone   string   `json:"contact_phone"`
-    Email          string   `json:"email"`
-    CurrentAge     int  `json:"current_age"`
-    ResponsiblePerson ResponseResponsiblePerson `json:"responsible_person"`
+	Name              string                    `json:"name"`
+	BirthDate         string                    `json:"birth_date"`
+	RG                string                    `json:"rg"`
+	CPF               string                    `json:"cpf"`
+	CadUnico          string                    `json:"cad_unico"`
+	NIS               string                    `json:"nis"`
+	School            string                    `json:"school"`
+	Address           string                    `json:"address"`
+	AddressNumber     string                    `json:"address_number"`
+	BloodType         string                    `json:"blood_type"`
+	Neighborhood      string                    `json:"neighborhood"`
+	City              string                    `json:"city"`
+	CEP               string                    `json:"cep"`
+	HomePhone         string                    `json:"home_phone"`
+	CellPhone         string                    `json:"cell_phone"`
+	ContactPhone      string                    `json:"contact_phone"`
+	Email             string                    `json:"email"`
+	CurrentAge        int                       `json:"current_age"`
+	Active            string                    `json:"active"`
+	ResponsiblePerson ResponseResponsiblePerson `json:"responsible_person"`
 }
 
 func SearchPersons(c *gin.Context) {
@@ -101,7 +105,7 @@ func SearchPersons(c *gin.Context) {
 	SELECT 
 		p.name, p.birth_date, p.rg, p.cpf, p.cad_unico, p.nis, p.school, p.address, p.address_number,
 		p.blood_type, p.neighborhood, p.city, p.cep, p.home_phone, p.cell_phone, p.contact_phone, p.email, p.current_age,
-		rp.id_person as rp_id_person, rp.name as rp_name, rp.relationship, rp.rg as rp_rg, rp.cpf as rp_cpf, rp.cell_phone as rp_cell_phone
+		rp.id_person as rp_id_person, rp.name as rp_name, rp.relationship, rp.rg as rp_rg, rp.cpf as rp_cpf, rp.cell_phone as rp_cell_phone, p.active
 	FROM 
 		persons p
 	LEFT JOIN 
@@ -109,21 +113,32 @@ func SearchPersons(c *gin.Context) {
 	WHERE 1=1`
 
 	var args []interface{}
+	paramIndex := 1
+
 	if params.Name != "" {
-		query += " AND (p.name ILIKE $1)"
+		query += " AND p.name ILIKE $" + strconv.Itoa(paramIndex)
 		args = append(args, "%"+params.Name+"%")
+		paramIndex++
 	}
 	if params.CPF != "" {
-		query += " AND (p.cpf ILIKE $2)"
+		query += " AND p.cpf ILIKE $" + strconv.Itoa(paramIndex)
 		args = append(args, "%"+params.CPF+"%")
+		paramIndex++
 	}
 	if params.School != "" {
-		query += " AND (p.school ILIKE $3)"
+		query += " AND p.school ILIKE $" + strconv.Itoa(paramIndex)
 		args = append(args, "%"+params.School+"%")
+		paramIndex++
 	}
 	if params.RG != "" {
-		query += " AND (p.rg ILIKE $4)"
+		query += " AND p.rg ILIKE $" + strconv.Itoa(paramIndex)
 		args = append(args, "%"+params.RG+"%")
+		paramIndex++
+	}
+	if params.Active != "" {
+		query += " AND p.active = $" + strconv.Itoa(paramIndex)
+		args = append(args, params.Active)
+		paramIndex++
 	}
 
 	rows, err := db.Query(query, args...)
@@ -138,23 +153,23 @@ func SearchPersons(c *gin.Context) {
 
 	var bodies []Response
 
-    for rows.Next() {
-        var body SearchFieldsPerson
-        var responsiblePerson SearchFieldsResponsablePerson
+	for rows.Next() {
+		var body SearchFieldsPerson
+		var responsiblePerson SearchFieldsResponsablePerson
 		var response Response
 
-        err := rows.Scan(
-            &body.Name, &body.BirthDate, &body.RG, &body.CPF, &body.CadUnico, &body.NIS, &body.School, &body.Address, &body.AddressNumber,
-            &body.BloodType, &body.Neighborhood, &body.City, &body.CEP, &body.HomePhone, &body.CellPhone, &body.ContactPhone, &body.Email, &body.CurrentAge,
-            &responsiblePerson.IDPerson, &responsiblePerson.Name, &responsiblePerson.Relationship, &responsiblePerson.RG, &responsiblePerson.CPF, &responsiblePerson.CellPhone,
-        )
-        if err != nil {
-            c.JSON(http.StatusInternalServerError, gin.H{
-                "status_code": 500,
-                "message":     "Erro ao escanear resultado: " + err.Error(),
-            })
-            return
-        }
+		err := rows.Scan(
+			&body.Name, &body.BirthDate, &body.RG, &body.CPF, &body.CadUnico, &body.NIS, &body.School, &body.Address, &body.AddressNumber,
+			&body.BloodType, &body.Neighborhood, &body.City, &body.CEP, &body.HomePhone, &body.CellPhone, &body.ContactPhone, &body.Email, &body.CurrentAge,
+			&responsiblePerson.IDPerson, &responsiblePerson.Name, &responsiblePerson.Relationship, &responsiblePerson.RG, &responsiblePerson.CPF, &responsiblePerson.CellPhone, &body.Active,
+		)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"status_code": 500,
+				"message":     "Erro ao escanear resultado: " + err.Error(),
+			})
+			return
+		}
 		response.Address = body.Address.String
 		response.AddressNumber = body.AddressNumber.String
 		response.BirthDate = body.BirthDate.String
@@ -174,6 +189,7 @@ func SearchPersons(c *gin.Context) {
 		response.RG = body.RG.String
 		response.School = body.School.String
 		response.CurrentAge = int(body.CurrentAge.Int64)
+		response.Active = body.Active.String
 
 		if responsiblePerson.IDPerson.Valid {
 			response.ResponsiblePerson.IDPerson = int(responsiblePerson.IDPerson.Int64)
@@ -185,8 +201,8 @@ func SearchPersons(c *gin.Context) {
 			response.ResponsiblePerson = ResponseResponsiblePerson{}
 		}
 
-        bodies = append(bodies, response)
-    }
+		bodies = append(bodies, response)
+	}
 	if err := rows.Err(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status_code": 500,
