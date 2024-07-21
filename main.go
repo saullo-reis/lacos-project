@@ -1,18 +1,30 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
-
+	"os"
+	_ "lacos.com/src/database/config"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"lacos.com/src/database/migrations"
 	"lacos.com/src/handlers/persons"
 	"lacos.com/src/handlers/user"
 )
 
-func main(){
-	migrations.CreateTables()
+func init(){
+	err := godotenv.Load("./.env")
+	if err != nil {
+		log.Fatalf("Error loading .env: "+err.Error())
+	}
+}
 
+func main(){
+	fmt.Println(os.Getenv("USERPOSTGRES"))
+	migrations.CreateTables()
+	
 	r := gin.Default()
 
 	r.GET("/ping", user.AuthMiddleware(), func(c *gin.Context) {

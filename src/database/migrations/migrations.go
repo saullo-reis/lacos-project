@@ -73,6 +73,7 @@ func CreateTables() {
 		password VARCHAR(100) NOT NULL
 	);
 	`
+	fmt.Println(dbconfig.DataSourceName)
 	db, err := sql.Open(dbconfig.PostgresDriver, dbconfig.DataSourceName)
 	if err != nil {
 		panic("Error connecting in database" + err.Error())
@@ -80,6 +81,7 @@ func CreateTables() {
 	fmt.Println("Connection with database sucess")
 	defer db.Close()
 
+	
 	_, err = db.Exec(queryToCreateTables)
 	if err != nil {
 		panic("Error in migrations: " + err.Error())

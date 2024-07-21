@@ -1,17 +1,16 @@
 package persons
 
 import (
-	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	dbconfig "lacos.com/src/database/config"
+	"lacos.com/src/database/config"
 )
 
 func DeletePerson(c *gin.Context) {
 	cpfToDelete := c.Param("cpf")
 
-	db, err := sql.Open(dbconfig.PostgresDriver, dbconfig.DataSourceName)
+	db, err := config.ConnectDB()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status_code": 500,

@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	dbconfig "lacos.com/src/database/config"
+	"lacos.com/src/database/config"
 )
 
 type SearchFieldsResponsablePerson struct {
@@ -82,7 +82,7 @@ type Response struct {
 }
 
 func SearchPersons(c *gin.Context) {
-	db, err := sql.Open(dbconfig.PostgresDriver, dbconfig.DataSourceName)
+	db, err := config.ConnectDB()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status_code": 500,

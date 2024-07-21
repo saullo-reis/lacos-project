@@ -1,21 +1,19 @@
 package user
 
 import (
-	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	dbconfig "lacos.com/src/database/config"
+	"lacos.com/src/database/config"
 )
 
 type bodyToChangePassword struct {
-	UserAdminId int    `json:"user_id"`
 	Username    string `json:"username"`
 	NewPassword string `json:"new_password"`
 }
 
 func ChangePassword(c *gin.Context) {
-	db, err := sql.Open(dbconfig.PostgresDriver, dbconfig.DataSourceName)
+	db, err := config.ConnectDB()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status_code": 500,
@@ -30,14 +28,6 @@ func ChangePassword(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status_code": 400,
 			"message":     "JSON invalido enviado",
-		})
-		return
-	}
-
-	if body.UserAdminId != 1 {
-		c.JSON(http.StatusForbidden, gin.H{
-			"status_code": 403,
-			"message":     "Apenas o admin consegue modificar a senha de alguém",
 		})
 		return
 	}

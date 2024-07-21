@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +23,8 @@ type User struct {
 	Password string
 }
 
-var jwtKey = []byte("sua_chave_secreta")
+var jwtKeySecret string
+var jwtKey = []byte(jwtKeySecret)
 
 func generateJWT(usename string) (string, error) {
 	claims := &jwt.RegisteredClaims{
@@ -47,6 +49,8 @@ func hasherPassword(password string) string{
 }
 
 func LoginUser(c *gin.Context) {
+	jwtKeySecret = os.Getenv("JWTKEYSECRET")
+
 	db, err := sql.Open(dbconfig.PostgresDriver, dbconfig.DataSourceName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
