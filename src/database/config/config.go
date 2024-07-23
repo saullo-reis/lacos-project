@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -46,13 +47,22 @@ func init() {
 }
 
 func ConnectDB() (*sql.DB, error) {
-	db, err := sql.Open(PostgresDriver, DataSourceName)
-	if err != nil {
-		return nil, err
-	}
-	err = db.Ping()
-	if err != nil {
-		return nil, err
-	}
-	return db, nil
+    var db *sql.DB
+    var err error
+    for i := 0; i < 10; i++ { // Tenta 10 vezes
+        db, err = sql.Open(PostgresDriver, DataSourceName)
+        if err != nil {
+            log.Printf("Failed to connect to database: %v", err)
+            time.Sleep(2 * time.Second) // Espera 2 segundos antes da próxima tentativa
+            continue
+        }
+        err = db.Ping()
+        if err == nil {
+            return db, nil
+        }
+        log.Printf("Failed to ping database: %v", err)
+        time.Sleep(2 * time.Second)
+    }
+    return nil, fmt.Errorf("failed to connect to database after multiple attempts: %v", err)
 }
+

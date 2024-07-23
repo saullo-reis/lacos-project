@@ -1,7 +1,6 @@
 package migrations
 
 import (
-	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
 	dbconfig "lacos.com/src/database/config"
@@ -72,11 +71,12 @@ func CreateTables() {
 		username VARCHAR(100) NOT NULL,
 		password VARCHAR(100) NOT NULL
 	);
+	INSERT INTO users(username, password) VALUES('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918');
 	`
 	fmt.Println(dbconfig.DataSourceName)
-	db, err := sql.Open(dbconfig.PostgresDriver, dbconfig.DataSourceName)
+	db, err := dbconfig.ConnectDB()
 	if err != nil {
-		panic("Error connecting in database" + err.Error())
+		panic("Error connecting in database: " + err.Error())
 	}
 	fmt.Println("Connection with database sucess")
 	defer db.Close()
