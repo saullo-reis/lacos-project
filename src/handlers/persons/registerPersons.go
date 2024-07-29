@@ -9,36 +9,6 @@ import (
 	"lacos.com/src/database/config"
 )
 
-type ResponsiblePerson struct {
-    IDPerson     int  `json:"id_person"`
-    Name         string `json:"name"`
-    Relationship string `json:"relationship"`
-    RG           string `json:"rg"`
-    CPF          string `json:"cpf"`
-    CellPhone    string `json:"cell_phone"`
-}
-
-type Body struct {
-    Name           string   `json:"name"`
-    BirthDate      string  `json:"birth_date"`
-    RG             string   `json:"rg"`
-    CPF            string   `json:"cpf"`
-    CadUnico       string   `json:"cad_unico"`
-    NIS            string   `json:"nis"`
-    School         string   `json:"school"`
-    Address        string   `json:"address"`
-    AddressNumber  string   `json:"address_number"`
-    BloodType      string   `json:"blood_type"`
-    Neighborhood   string   `json:"neighborhood"`
-    City           string   `json:"city"`
-    CEP            string   `json:"cep"`
-    HomePhone      string   `json:"home_phone"`
-    CellPhone      string   `json:"cell_phone"`
-    ContactPhone   string   `json:"contact_phone"`
-    Email          string   `json:"email"`
-    CurrentAge     int  `json:"current_age"`
-    ResponsiblePerson ResponsiblePerson `json:"responsible_person"`
-}
 func IsValidEmail(email string) bool {
 	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
 	return emailRegex.MatchString(email)
