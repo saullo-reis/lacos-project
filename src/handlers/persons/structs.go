@@ -63,7 +63,7 @@ type SearchFieldsPerson struct {
 	Email             sql.NullString            `json:"email"`
 	CurrentAge        sql.NullInt64             `json:"current_age"`
 	Active            sql.NullString                    `json:"active"`
-	ResponsiblePerson ResponseResponsiblePerson `json:"responsible_person"`
+	ResponsiblePerson SearchFieldsResponsablePerson `json:"responsible_person"`
 }
 
 type Params struct {

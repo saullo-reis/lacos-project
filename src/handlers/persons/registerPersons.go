@@ -79,9 +79,9 @@ func RegisterPersons(c *gin.Context) {
 	}
 
 	err = db.QueryRow(`INSERT INTO persons (
-		name, birth_date, rg, cpf, cad_unico, nis, school, address, address_number, blood_type, neighborhood, city, cep, home_phone, cell_phone, contact_phone, email, current_age
-	, active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, 'Y') RETURNING id_person`,
-		body.Name, body.BirthDate, body.RG, body.CPF, body.CadUnico, body.NIS, body.School, body.Address, body.AddressNumber, body.BloodType, body.Neighborhood, body.City, body.CEP, body.HomePhone, body.CellPhone, body.ContactPhone, body.Email, body.CurrentAge).Scan(&personID)
+		name, birth_date, rg, cpf, cad_unico, nis, school, address, address_number, blood_type, neighborhood, city, cep, home_phone, cell_phone, contact_phone, email
+	, active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, 'Y') RETURNING id_person`,
+		body.Name, body.BirthDate, body.RG, body.CPF, body.CadUnico, body.NIS, body.School, body.Address, body.AddressNumber, body.BloodType, body.Neighborhood, body.City, body.CEP, body.HomePhone, body.CellPhone, body.ContactPhone, body.Email).Scan(&personID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
