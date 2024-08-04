@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	"github.com/gin-gonic/gin"
+	"time"
 	"lacos.com/src/database/config"
 )
 
@@ -14,6 +15,12 @@ func IsValidEmail(email string) bool {
 	return emailRegex.MatchString(email)
 }
 
+func transformDateInAge(birthDate time.Time) int{
+	dateNow := time.Now()
+	age := dateNow.Year() - birthDate.Year() 
+
+	return age
+}
 func RegisterPersons(c *gin.Context) {
 	db, err := config.ConnectDB()
 	if err != nil {
@@ -36,6 +43,16 @@ func RegisterPersons(c *gin.Context) {
 		})
 		return
 	}
+	currentAge, err := time.Parse("2006-01-02", body.BirthDate)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status_code": 500,
+			"message":     "Erro na conversão de data",
+			"error": err.Error(),
+		})
+		return
+	}
+	age := transformDateInAge(currentAge)
 
 	validEmail := IsValidEmail(body.Email)
 	if !validEmail && body.Email != "" {
@@ -69,7 +86,7 @@ func RegisterPersons(c *gin.Context) {
 		})
 		return
 	}
-
+ 
 	if personID != 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status_code": 400,
@@ -79,9 +96,9 @@ func RegisterPersons(c *gin.Context) {
 	}
 
 	err = db.QueryRow(`INSERT INTO persons (
-		name, birth_date, rg, cpf, cad_unico, nis, school, address, address_number, blood_type, neighborhood, city, cep, home_phone, cell_phone, contact_phone, email
-	, active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, 'Y') RETURNING id_person`,
-		body.Name, body.BirthDate, body.RG, body.CPF, body.CadUnico, body.NIS, body.School, body.Address, body.AddressNumber, body.BloodType, body.Neighborhood, body.City, body.CEP, body.HomePhone, body.CellPhone, body.ContactPhone, body.Email).Scan(&personID)
+		name, birth_date, rg, cpf, cad_unico, nis, school, address, address_number, blood_type, neighborhood, city, cep, home_phone, cell_phone, contact_phone, email, current_age
+	, active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18,  'Y') RETURNING id_person`,
+		body.Name, body.BirthDate, body.RG, body.CPF, body.CadUnico, body.NIS, body.School, body.Address, body.AddressNumber, body.BloodType, body.Neighborhood, body.City, body.CEP, body.HomePhone, body.CellPhone, body.ContactPhone, body.Email, age).Scan(&personID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

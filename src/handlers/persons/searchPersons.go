@@ -122,6 +122,7 @@ func SearchPersons(c *gin.Context) {
 			response.ResponsiblePerson.IDPerson = int(responsiblePerson.IDPerson.Int64)
 			response.ResponsiblePerson.Name = responsiblePerson.Name.String
 			response.ResponsiblePerson.CPF = responsiblePerson.CPF.String
+			response.ResponsiblePerson.RG = responsiblePerson.RG.String
 			response.ResponsiblePerson.CellPhone = responsiblePerson.CellPhone.String
 			response.ResponsiblePerson.Relationship = responsiblePerson.Relationship.String
 		} else {
