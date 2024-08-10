@@ -5,11 +5,13 @@ import (
 	"log"
 	"net/http"
 	"os"
-	_ "lacos.com/src/database/config"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	_ "lacos.com/src/database/config"
 	"lacos.com/src/database/migrations"
+	"lacos.com/src/handlers/activities"
 	"lacos.com/src/handlers/persons"
 	"lacos.com/src/handlers/user"
 )
@@ -39,6 +41,10 @@ func main(){
 	r.GET("/user/getUsers/:username", user.AuthMiddlewareAdmin(), user.GetUsers)
 	r.POST("/user/register",user.AuthMiddlewareAdmin(), user.RegisterUser)
 	r.DELETE("/user/deleteUser/:username", user.AuthMiddlewareAdmin(), user.DeleteUser)
+	r.GET("/activities/:name", user.AuthMiddlewareAdmin(), activities.GetActivitiesList)
+	r.POST("/activities/create", user.AuthMiddlewareAdmin(), activities.CreateActivities)
+	r.DELETE("/activities/delete/:id_activity", user.AuthMiddlewareAdmin(), activities.DeleteActivity)
+	r.PATCH("/activities/update/:id_activity", user.AuthMiddlewareAdmin(), activities.UpdateActivity)
 
 	//NORMAL HANDLERS
 	r.POST("/persons/register", user.AuthMiddleware(), persons.RegisterPersons)
