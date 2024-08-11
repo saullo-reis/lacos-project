@@ -51,5 +51,8 @@ func main(){
 	r.POST("/persons/search", user.AuthMiddleware(), persons.SearchPersons)
 	r.DELETE("/persons/delete/:cpf", user.AuthMiddleware(), persons.DeletePerson)
 	r.PATCH("/persons/update/:cpf", user.AuthMiddleware(), persons.UpdatePersons)
+	r.POST("/persons/:cpf_person/activity/:id_activity_list/period/:id_period",user.AuthMiddleware(), activities.LinkActivity)
+	r.GET("/persons/:cpf_person/activities", user.AuthMiddleware(), activities.GetLinkActivities)
+	r.DELETE("/persons/:cpf_person/activities/:id_activities", user.AuthMiddleware(), activities.ExcludeLinkActivity)
 	r.Run()
 }
