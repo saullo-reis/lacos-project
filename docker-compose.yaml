@@ -1,24 +1,27 @@
 version: '3.8'
 services:
   postgres:
-    image: postgres:14
+    image: postgres:13
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: lacos
-
+      POSTGRES_USER: ${USERPOSTGRES}
+      POSTGRES_PASSWORD: ${PASSWORDPOSTGRES}
+      POSTGRES_DB: ${DBNAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data
   api:
-    build: 
+    build:  
       context: .
       dockerfile: Dockerfile
     ports:
       - 8080:8080
     environment:
-      USERPOSTGRES: postgres
-      POSTGRESDRIVER: postgres
-      HOSTPOSTGRES: postgres
-      PORTPOSTGRES: 5432
-      PASSWORDPOSTGRES: postgres
-      DBNAME: lacos
+      USERPOSTGRES: ${USERPOSTGRES}
+      POSTGRESDRIVER: ${POSTGRESDRIVER}
+      HOSTPOSTGRES: ${HOSTPOSTGRES}
+      PORTPOSTGRES: ${PORTPOSTGRES}
+      PASSWORDPOSTGRES: ${PASSWORDPOSTGRES}
+      DBNAME: ${DBNAME}
     depends_on:
       - postgres
+volumes:
+  db_data:  

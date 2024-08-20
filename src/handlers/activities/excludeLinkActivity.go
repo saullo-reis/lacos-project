@@ -43,7 +43,7 @@ func ExcludeLinkActivity(c *gin.Context) {
 		return
 	}
 
-	//DEPOIS ARRUMO ISSO
+	//FAZER UMA VERIFICAÇÃO SE O ID DIGITADO NA URL EXISTE MESMO
 
 	// var name_activity string
 	// err = db.QueryRow("SELECT id_activities name FROM activities WHERE id_activities = $1", id_activities).Scan(&name_activity)
